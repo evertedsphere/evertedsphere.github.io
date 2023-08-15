@@ -1,0 +1,766 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2023-08-15 Tue 14:25 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Shell techniques</title>
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Shell techniques</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orgd675dcf">1. Nesting strings / escaping delimiters</a>
+<ul>
+<li><a href="#org04582cd">1.1. Prefer <code>$'...'</code> when you do not need direct substitution</a>
+<ul>
+<li><a href="#org383b0e5">1.1.1. In <code>sh -c</code> contexts, this is not a limitation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#orge990731">2. Redirection</a>
+<ul>
+<li><a href="#org1525817">2.1. Redirect output to a file <i>alongside</i> stdout</a></li>
+<li><a href="#orge84a192">2.2. Redirect output to <code>/dev/null</code> in one go</a></li>
+</ul>
+</li>
+<li><a href="#orgd413e9c">3. Using <code>sh -c</code> with <code>find -exec</code></a>
+<ul>
+<li><a href="#orgaa18122">3.1. Redirect <code>find -exec sh -c</code> output to <code>/dev/null</code> once you&rsquo;re ready to run it</a></li>
+</ul>
+</li>
+<li><a href="#org3bde6f9">4. <code>jq</code> tricks</a>
+<ul>
+<li><a href="#org2a18b8d">4.1. Suppress output</a></li>
+<li><a href="#orga492bdd">4.2. Use <code>jq</code> predicates to filter in a <code>find -exec</code> pipeline</a></li>
+<li><a href="#org6946a7a">4.3. Use <code>--exit-status / -e</code> in pipelines</a></li>
+<li><a href="#org5d05986">4.4. Use <code>debug</code> or <code>stderr</code> to look at intermediate values</a></li>
+<li><a href="#orgbb3312c">4.5. &ldquo;Set your data aside&rdquo;</a></li>
+<li><a href="#orgb0d1177">4.6. Paths are first-class!</a></li>
+<li><a href="#org8239773">4.7. Using <code>transpose</code> to zip key and value arrays into objects</a></li>
+</ul>
+</li>
+<li><a href="#org8003f02">5. Miller</a>
+<ul>
+<li><a href="#org81caee4">5.1. Quickly display a CSV in columns with the <code>pprint</code> format</a></li>
+<li><a href="#org884b4c4">5.2. Transpose large records with the <code>xtab</code> format</a></li>
+<li><a href="#org96956d0">5.3. Running sum, etc.</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgd675dcf" class="outline-2">
+<h2 id="orgd675dcf"><span class="section-number-2">1.</span> Nesting strings / escaping delimiters</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+The basics:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #fabd2f;">echo</span> <span style="color: #b8bb26;">"\""</span>
+<span style="color: #928374;"># </span><span style="color: #928374;">does not work</span>
+<span style="color: #928374;"># </span><span style="color: #928374;">echo</span><span style="color: #928374;"> '\''</span>
+<span style="color: #fabd2f;">echo</span> <span style="color: #b8bb26;">"\\"</span>
+<span style="color: #fabd2f;">echo</span> <span style="color: #b8bb26;">'\'</span>
+<span style="color: #fabd2f;">echo</span> <span style="color: #b8bb26;">'"'</span>
+<span style="color: #fabd2f;">echo</span> <span style="color: #b8bb26;">"'"</span>
+</pre>
+</div>
+
+<pre class="example">
+"
+\
+\
+"
+'
+</pre>
+</div>
+
+<div id="outline-container-org04582cd" class="outline-3">
+<h3 id="org04582cd"><span class="section-number-3">1.1.</span> Prefer <code>$'...'</code> when you do not need direct substitution</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+<code>$'...'</code> works like <code>'...'</code> except it can handle escapes:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #fabd2f;">echo</span> $<span style="color: #b8bb26;">'asdf \'</span>b\nc<span style="color: #b8bb26;">\''</span>
+</pre>
+</div>
+
+<pre class="example">
+asdf 'b
+c'
+</pre>
+</div>
+
+<div id="outline-container-org383b0e5" class="outline-4">
+<h4 id="org383b0e5"><span class="section-number-4">1.1.1.</span> In <code>sh -c</code> contexts, this is not a limitation</h4>
+<div class="outline-text-4" id="text-1-1-1">
+<p>
+Perform your command substitution out-of-band and provide the
+results as extra command-line arguments.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #fabd2f;">cd</span> $<span style="color: #fe8019;">(</span>mktemp -d<span style="color: #fe8019;">)</span>
+<span style="color: #fabd2f;">touch</span> <span style="color: #fe8019;">{</span>a,b,c<span style="color: #fe8019;">}</span>.txt
+<span style="color: #fabd2f;">find</span> * -type f -name <span style="color: #b8bb26;">'*.txt'</span> -exec sh -c $<span style="color: #b8bb26;">'\</span>
+<span style="color: #b8bb26;">    </span><span style="color: #b8bb26;">echo</span><span style="color: #b8bb26;"> "$2:$3/$1"</span>
+<span style="color: #b8bb26;">'</span> <span style="color: #b8bb26;">'find_exec'</span> <span style="color: #b8bb26;">'{}'</span> <span style="color: #b8bb26;">"</span><span style="color: #ebdbb2; font-weight: bold;">$(hostname)</span><span style="color: #b8bb26;">"</span> <span style="color: #b8bb26;">"</span><span style="color: #ebdbb2; font-weight: bold;">$(</span><span style="color: #ebdbb2; font-weight: bold;">pwd</span><span style="color: #ebdbb2; font-weight: bold;">)</span><span style="color: #b8bb26;">"</span> <span style="color: #b8bb26;">\;</span>
+</pre>
+</div>
+
+<pre class="example">
+malina:/tmp/tmp.LGULZHrGWQ/a.txt
+malina:/tmp/tmp.LGULZHrGWQ/b.txt
+malina:/tmp/tmp.LGULZHrGWQ/c.txt
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orge990731" class="outline-2">
+<h2 id="orge990731"><span class="section-number-2">2.</span> Redirection</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-org1525817" class="outline-3">
+<h3 id="org1525817"><span class="section-number-3">2.1.</span> Redirect output to a file <i>alongside</i> stdout</h3>
+<div class="outline-text-3" id="text-2-1">
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #928374;"># </span><span style="color: #928374;">stdout only</span>
+<span style="color: #fb4934;">exec</span>  &gt; &gt;<span style="color: #fe8019;">(</span>tee out.log<span style="color: #fe8019;">)</span>
+<span style="color: #928374;"># </span><span style="color: #928374;">stderr only/separately</span>
+<span style="color: #fb4934;">exec</span> <span style="color: #d3869b; font-weight: bold;">2</span>&gt; &gt;<span style="color: #fe8019;">(</span>tee err.log<span style="color: #fe8019;">)</span>
+<span style="color: #928374;"># </span><span style="color: #928374;">both</span>
+<span style="color: #fb4934;">exec</span> &amp;&gt; &gt;<span style="color: #fe8019;">(</span>tee all.log<span style="color: #fe8019;">)</span>
+</pre>
+</div>
+
+<p>
+Note that it&rsquo;s <code>tee</code> that writes to <code>std{out,err}</code> here.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orge84a192" class="outline-3">
+<h3 id="orge84a192"><span class="section-number-3">2.2.</span> Redirect output to <code>/dev/null</code> in one go</h3>
+<div class="outline-text-3" id="text-2-2">
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #fb4934;">exec</span> &gt;/dev/null
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd413e9c" class="outline-2">
+<h2 id="orgd413e9c"><span class="section-number-2">3.</span> Using <code>sh -c</code> with <code>find -exec</code></h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="outline-container-orgaa18122" class="outline-3">
+<h3 id="orgaa18122"><span class="section-number-3">3.1.</span> Redirect <code>find -exec sh -c</code> output to <code>/dev/null</code> once you&rsquo;re ready to run it</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+See <a href="#orge84a192">Redirect output to <code>/dev/null</code> in one go</a>.
+</p>
+
+<p>
+This allows you to not have to add tons of <code>&gt;/dev/null</code> all over the place or
+fiddle with <code>--quiet</code> options for different commands  after you&rsquo;re done actually
+iterating on your shell pipeline &#x2026; especially since it&rsquo;s rarely the case that
+you&rsquo;re done the first time you think you&rsquo;re done.
+</p>
+
+<p>
+(This trick also comes in handy when you hallucinate that a command that really
+should have a <code>-q</code> flag, such as <code>jq</code>, does not in fact have one.)
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #83a598;">cur_tmpdir</span>=$<span style="color: #fe8019;">(</span>mktemp -d<span style="color: #fe8019;">)</span>
+<span style="color: #fabd2f;">cd</span> <span style="color: #b8bb26;">"</span><span style="color: #d3869b;">$</span><span style="color: #83a598;">cur_tmpdir</span><span style="color: #b8bb26;">"</span>
+<span style="color: #fabd2f;">touch</span> <span style="color: #fe8019;">{</span>a,b,c<span style="color: #fe8019;">}</span>.txt
+<span style="color: #fabd2f;">echo</span> <span style="color: #b8bb26;">"text"</span> &gt; c.txt
+
+<span style="color: #fabd2f;">echo</span> <span style="color: #b8bb26;">"(developing script)"</span>
+
+<span style="color: #fabd2f;">find</span> * -type f -name <span style="color: #b8bb26;">'*.txt'</span> -exec sh -c $<span style="color: #b8bb26;">'\</span>
+<span style="color: #b8bb26;">    </span><span style="color: #b8bb26;">grep</span><span style="color: #b8bb26;"> text "$1"</span>
+<span style="color: #b8bb26;">'</span> <span style="color: #b8bb26;">'find_exec'</span> <span style="color: #b8bb26;">'{}'</span> <span style="color: #b8bb26;">\;</span> -print
+
+<span style="color: #fabd2f;">echo</span> <span style="color: #b8bb26;">"(done developing script)"</span>
+
+<span style="color: #fabd2f;">find</span> * -type f -name <span style="color: #b8bb26;">'*.txt'</span> -exec sh -c $<span style="color: #b8bb26;">'\</span>
+<span style="color: #b8bb26;">    exec &gt;/dev/null</span>
+<span style="color: #b8bb26;">    </span><span style="color: #b8bb26;">grep</span><span style="color: #b8bb26;"> text "$1"</span>
+<span style="color: #b8bb26;">'</span> <span style="color: #b8bb26;">'find_exec'</span> <span style="color: #b8bb26;">'{}'</span> <span style="color: #b8bb26;">\;</span> -print
+
+<span style="color: #fabd2f;">rm</span> -rf <span style="color: #b8bb26;">"</span><span style="color: #d3869b;">$</span><span style="color: #83a598;">cur_tmpdir</span><span style="color: #b8bb26;">"</span>
+</pre>
+</div>
+
+<pre class="example">
+(developing script)
+text
+c.txt
+(done developing script)
+c.txt
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org3bde6f9" class="outline-2">
+<h2 id="org3bde6f9"><span class="section-number-2">4.</span> <code>jq</code> tricks</h2>
+<div class="outline-text-2" id="text-4">
+</div>
+<div id="outline-container-org2a18b8d" class="outline-3">
+<h3 id="org2a18b8d"><span class="section-number-3">4.1.</span> Suppress output</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+Apart from redirection, there is a decent way to do this within <code>jq</code> while
+preserving <code>-e</code>-like usage, with the use of <code>halt{,_error}</code>.
+</p>
+
+<p>
+Note that <code>-e</code> allows for strictly more expressiveness, since it distinguishes
+between the <i>lack</i> of any results (e.g. <code>.[]</code> on an empty list) and the
+<i>presence</i> of falsy results, but I have never found myself in a situation where
+this trick (or redirection) did not suffice.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #83a598;">cur_tmpdir</span>=$<span style="color: #fe8019;">(</span>mktemp -d<span style="color: #fe8019;">)</span>
+<span style="color: #fabd2f;">cd</span> <span style="color: #b8bb26;">"</span><span style="color: #d3869b;">$</span><span style="color: #83a598;">cur_tmpdir</span><span style="color: #b8bb26;">"</span>
+
+<span style="color: #fabd2f;">echo</span> <span style="color: #b8bb26;">'{"x":2}'</span>    &gt; a.json
+<span style="color: #fabd2f;">echo</span> <span style="color: #b8bb26;">'{"x":null}'</span> &gt; b.json
+<span style="color: #fabd2f;">echo</span> <span style="color: #b8bb26;">'{"y":3}'</span>    &gt; c.json
+
+<span style="color: #fb4934;">for</span> f<span style="color: #fb4934;"> in</span> *.json; <span style="color: #fb4934;">do</span>
+    jq -e <span style="color: #b8bb26;">'.x|if . then halt else halt_error end'</span> <span style="color: #b8bb26;">"</span><span style="color: #d3869b;">$</span><span style="color: #83a598;">f</span><span style="color: #b8bb26;">"</span> || <span style="color: #fabd2f;">echo</span> <span style="color: #b8bb26;">"x not found in </span><span style="color: #d3869b;">$</span><span style="color: #83a598;">f</span><span style="color: #b8bb26;">"</span>
+<span style="color: #fb4934;">done</span>
+
+<span style="color: #fabd2f;">rm</span> -rf <span style="color: #b8bb26;">"</span><span style="color: #d3869b;">$</span><span style="color: #83a598;">cur_tmpdir</span><span style="color: #b8bb26;">"</span>
+</pre>
+</div>
+
+<pre class="example">
+x not found in b.json
+x not found in c.json
+</pre>
+
+
+<p>
+You can put that snippet into your local stdlib:
+</p>
+<div class="org-src-container">
+<pre class="src src-jq">def quiet: if . then halt else halt_error end;
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orga492bdd" class="outline-3">
+<h3 id="orga492bdd"><span class="section-number-3">4.2.</span> Use <code>jq</code> predicates to filter in a <code>find -exec</code> pipeline</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+Also see <a href="#org6946a7a">Use <code>--exit-status / -e</code> in pipelines</a>.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org6946a7a" class="outline-3">
+<h3 id="org6946a7a"><span class="section-number-3">4.3.</span> Use <code>--exit-status / -e</code> in pipelines</h3>
+<div class="outline-text-3" id="text-4-3">
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #83a598;">cur_tmpdir</span>=$<span style="color: #fe8019;">(</span>mktemp -d<span style="color: #fe8019;">)</span>
+<span style="color: #fabd2f;">cd</span> <span style="color: #b8bb26;">"</span><span style="color: #d3869b;">$</span><span style="color: #83a598;">cur_tmpdir</span><span style="color: #b8bb26;">"</span>
+
+<span style="color: #fabd2f;">echo</span> <span style="color: #b8bb26;">'{"x":2}'</span>    &gt; a.json
+<span style="color: #fabd2f;">echo</span> <span style="color: #b8bb26;">'{"x":null}'</span> &gt; b.json
+<span style="color: #fabd2f;">echo</span> <span style="color: #b8bb26;">'{"y":3}'</span>    &gt; c.json
+
+<span style="color: #fb4934;">for</span> f<span style="color: #fb4934;"> in</span> *.json; <span style="color: #fb4934;">do</span>
+    jq -e <span style="color: #b8bb26;">'.x'</span> <span style="color: #b8bb26;">"</span><span style="color: #d3869b;">$</span><span style="color: #83a598;">f</span><span style="color: #b8bb26;">"</span> &gt;/dev/null || <span style="color: #fabd2f;">echo</span> <span style="color: #b8bb26;">"x not found in </span><span style="color: #d3869b;">$</span><span style="color: #83a598;">f</span><span style="color: #b8bb26;">"</span>
+<span style="color: #fb4934;">done</span>
+
+<span style="color: #fabd2f;">rm</span> -rf <span style="color: #b8bb26;">"</span><span style="color: #d3869b;">$</span><span style="color: #83a598;">cur_tmpdir</span><span style="color: #b8bb26;">"</span>
+</pre>
+</div>
+
+<pre class="example">
+x not found in b.json
+x not found in c.json
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org5d05986" class="outline-3">
+<h3 id="org5d05986"><span class="section-number-3">4.4.</span> Use <code>debug</code> or <code>stderr</code> to look at intermediate values</h3>
+<div class="outline-text-3" id="text-4-4">
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #fb4934;">exec</span> <span style="color: #d3869b; font-weight: bold;">2</span>&gt; /dev/stdout
+<span style="color: #fabd2f;">echo</span> <span style="color: #b8bb26;">'{"a":{"b":{"c":[4,5],"d":[6,7]}}}'</span> | jq -rc <span style="color: #b8bb26;">'</span>
+<span style="color: #b8bb26;">.a</span>
+<span style="color: #b8bb26;">| debug</span>
+<span style="color: #b8bb26;">| (.b.c | add | debug) + (.b.d | add | debug)</span>
+<span style="color: #b8bb26;">'</span>
+</pre>
+</div>
+
+<pre class="example">
+["DEBUG:",{"b":{"c":[4,5],"d":[6,7]}}]
+["DEBUG:",13]
+["DEBUG:",9]
+22
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgbb3312c" class="outline-3">
+<h3 id="orgbb3312c"><span class="section-number-3">4.5.</span> &ldquo;Set your data aside&rdquo;</h3>
+<div class="outline-text-3" id="text-4-5">
+<p>
+In brief, in a long pipeline where you produce several intermediate results that
+have to be combined at the end, especially when most of the pipeline is
+dedicated to one of them, it is often cleaner to replace
+</p>
+
+<div class="org-src-container">
+<pre class="src src-jq">f as $x
+| g as $y
+| (h | i | j($x) | k | l as $z)
+| { a: m($x, $y), b: ., c: $z }
+</pre>
+</div>
+
+<p>
+with
+</p>
+
+<div class="org-src-container">
+<pre class="src src-jq">. as $data
+| ($data | f) as $x
+| ($data | g) as $y
+| h
+| i
+| j($x)
+| k
+| { a: ($data | m($x, $y)), b: $data, c: . }
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgb0d1177" class="outline-3">
+<h3 id="orgb0d1177"><span class="section-number-3">4.6.</span> Paths are first-class!</h3>
+<div class="outline-text-3" id="text-4-6">
+<p>
+Consider the following snippet:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #fabd2f;">echo</span> <span style="color: #b8bb26;">'{"A":{"B":{"x":2},"C":{"y":5}},"D":{"E":{"x":6,"y":7}}}'</span> | jq -rc <span style="color: #b8bb26;">'</span>
+<span style="color: #b8bb26;">to_entries | .[] | .key as         $key | .value |</span>
+<span style="color: #b8bb26;">to_entries | .[] | .key as     $sub_key | .value |</span>
+<span style="color: #b8bb26;">to_entries | .[] | .key as $sub_sub_key | .value |</span>
+<span style="color: #b8bb26;">{</span>
+<span style="color: #b8bb26;">    foo: $key,</span>
+<span style="color: #b8bb26;">    bar: $sub_key,</span>
+<span style="color: #b8bb26;">    baz: $sub_sub_key,</span>
+<span style="color: #b8bb26;">    val: .</span>
+<span style="color: #b8bb26;">}'</span>
+</pre>
+</div>
+
+<pre class="example">
+{"foo":"A","bar":"B","baz":"x","val":2}
+{"foo":"A","bar":"C","baz":"y","val":5}
+{"foo":"D","bar":"E","baz":"x","val":6}
+{"foo":"D","bar":"E","baz":"y","val":7}
+</pre>
+
+
+<p>
+It takes some nested objects and &ldquo;flattens&rdquo; them into a list of the keys
+annotated with the values of the nodes on the path from the root. One of <code>jq</code>&rsquo;s
+most underused aspects is the range of path-level manipulation possible with
+<code>paths</code>, <code>path</code>, <code>getpath</code>, and related functions. These allow treating paths as
+first-class objects that you can manipulate with normal <code>jq</code> code. The following
+snippet is, thus, equivalent to the first one:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #fabd2f;">echo</span> <span style="color: #b8bb26;">'{"A":{"B":{"x":2},"C":{"y":5}},"D":{"E":{"x":6,"y":7}}}'</span> | jq -rc <span style="color: #b8bb26;">'</span>
+<span style="color: #b8bb26;">path(.[][][]) as $p |</span>
+<span style="color: #b8bb26;">{</span>
+<span style="color: #b8bb26;">  foo: $p[0],</span>
+<span style="color: #b8bb26;">  bar: $p[1],</span>
+<span style="color: #b8bb26;">  baz: $p[2],</span>
+<span style="color: #b8bb26;">  val: getpath($p)</span>
+<span style="color: #b8bb26;">}'</span>
+</pre>
+</div>
+
+<pre class="example">
+{"foo":"A","bar":"B","baz":"x","val":2}
+{"foo":"A","bar":"C","baz":"y","val":5}
+{"foo":"D","bar":"E","baz":"x","val":6}
+{"foo":"D","bar":"E","baz":"y","val":7}
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org8239773" class="outline-3">
+<h3 id="org8239773"><span class="section-number-3">4.7.</span> Using <code>transpose</code> to zip key and value arrays into objects</h3>
+<div class="outline-text-3" id="text-4-7">
+<p>
+Incidentally, a cleaner way to do the previous task, which scales to much more
+deeply-nested objects with no modification, is to use <code>paths(scalars)</code> to directly traverse
+the paths to the leaves and zip them with the labels we want to use.
+</p>
+
+<p>
+While we&rsquo;re at it, we can also provide the labels separately with <code>--argjson</code>:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #fabd2f;">echo</span> <span style="color: #b8bb26;">'{"A":{"B":{"x":2},"C":{"y":5}},"D":{"E":{"x":6,"y":7}}}'</span> | <span style="color: #b8bb26;">\</span>
+    jq -rc --argjson labels <span style="color: #b8bb26;">'["foo","bar","baz"]'</span> <span style="color: #b8bb26;">'</span>
+<span style="color: #b8bb26;">paths(scalars) as $p</span>
+<span style="color: #b8bb26;">| ( [$labels, $p]</span>
+<span style="color: #b8bb26;">  | transpose</span>
+<span style="color: #b8bb26;">  | map({ key: .[0], value: .[1] }) | from_entries</span>
+<span style="color: #b8bb26;">  ) as $ks</span>
+<span style="color: #b8bb26;">| $ks + { val: getpath($p) }'</span>
+</pre>
+</div>
+
+<pre class="example">
+{"foo":"A","bar":"B","baz":"x","val":2}
+{"foo":"A","bar":"C","baz":"y","val":5}
+{"foo":"D","bar":"E","baz":"x","val":6}
+{"foo":"D","bar":"E","baz":"y","val":7}
+</pre>
+
+
+<p>
+It&rsquo;s a bit clunky, because of how there&rsquo;s no equivalent to
+</p>
+<div class="org-src-container">
+<pre class="src src-haskell"><span style="color: #b8bb26;">fromLists</span> <span style="color: #83a598;">::</span> [k] <span style="color: #83a598;">-&gt;</span> [v] <span style="color: #83a598;">-&gt;</span> <span style="color: #fabd2f;">Map</span> k v
+<span style="color: #b8bb26;">fromLists</span> ks vs <span style="color: #83a598;">=</span> Map.fromList (zip ks vs)
+</pre>
+</div>
+<p>
+among the <code>jq</code> builtins. For the moment, I make do with these helpers:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-jq">def to_entry: { key: .[0], value: .[1] };
+def from_assoc_list: map(to_entry) | from_entries;
+def from_kv_lists: transpose | from_assoc_list;
+</pre>
+</div>
+
+<p>
+I would personally go a step further and use the <a href="#orgbb3312c">&ldquo;Set your data aside&rdquo;</a> trick to
+sidestep the awkwardness of having to carefully avoid messing up the primary
+data stream:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #fabd2f;">echo</span> <span style="color: #b8bb26;">'{"A":{"B":{"x":2},"C":{"y":5}},"D":{"E":{"x":6,"y":7}}}'</span> | <span style="color: #b8bb26;">\</span>
+    jq -rc --argjson labels <span style="color: #b8bb26;">'["foo","bar","baz"]'</span> <span style="color: #b8bb26;">'</span>
+<span style="color: #b8bb26;">def to_entry: {key:.[0],value:.[1]};</span>
+<span style="color: #b8bb26;">. as $data</span>
+<span style="color: #b8bb26;">| paths(scalars) as $p</span>
+<span style="color: #b8bb26;">| [$labels, $p]</span>
+<span style="color: #b8bb26;">| transpose</span>
+<span style="color: #b8bb26;">| map(to_entry)</span>
+<span style="color: #b8bb26;">| from_entries</span>
+<span style="color: #b8bb26;">| .val = ($data | getpath($p))'</span>
+</pre>
+</div>
+
+<pre class="example">
+{"foo":"A","bar":"B","baz":"x","val":2}
+{"foo":"A","bar":"C","baz":"y","val":5}
+{"foo":"D","bar":"E","baz":"x","val":6}
+{"foo":"D","bar":"E","baz":"y","val":7}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org8003f02" class="outline-2">
+<h2 id="org8003f02"><span class="section-number-2">5.</span> Miller</h2>
+<div class="outline-text-2" id="text-5">
+</div>
+<div id="outline-container-org81caee4" class="outline-3">
+<h3 id="org81caee4"><span class="section-number-3">5.1.</span> Quickly display a CSV in columns with the <code>pprint</code> format</h3>
+<div class="outline-text-3" id="text-5-1">
+<p>
+This can be done with <code>column -s, -t</code> but it makes for a good way to start using
+Miller, especially when you realise that your CSVs contain hundreds of columns
+and you really need to get some filtering done. I may be speaking from
+experience here.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #fabd2f;">echo</span> -e <span style="color: #b8bb26;">"a,b,c\n1,2,3"</span> | mlr --c2p <span style="color: #fabd2f;">cat</span>
+</pre>
+</div>
+
+<pre class="example">
+a b c
+1 2 3
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org884b4c4" class="outline-3">
+<h3 id="org884b4c4"><span class="section-number-3">5.2.</span> Transpose large records with the <code>xtab</code> format</h3>
+<div class="outline-text-3" id="text-5-2">
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #fabd2f;">echo</span> -e <span style="color: #b8bb26;">"a,b,c\n1,2,3\n4,5,6"</span> | mlr --c2x <span style="color: #fabd2f;">cat</span>
+</pre>
+</div>
+
+<pre class="example">
+a 1
+b 2
+c 3
+
+a 4
+b 5
+c 6
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org96956d0" class="outline-3">
+<h3 id="org96956d0"><span class="section-number-3">5.3.</span> Running sum, etc.</h3>
+<div class="outline-text-3" id="text-5-3">
+<p>
+<code>@foo</code> denotes an <i>out-of-stream</i> variable, whose value persists between records.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #fabd2f;">echo</span> -e <span style="color: #b8bb26;">"a,b,c\n</span><span style="color: #ebdbb2; font-weight: bold;">$(seq 1 12 | paste -d',' - - -)</span><span style="color: #b8bb26;">"</span> | <span style="color: #b8bb26;">\</span>
+    mlr --c2p put <span style="color: #b8bb26;">'@sum += $a; $sum = @sum'</span>
+</pre>
+</div>
+
+<pre class="example">
+a  b  c  sum
+1  2  3  1
+4  5  6  5
+7  8  9  12
+10 11 12 22
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Created: 2023-08-15 Tue 14:25</p>
+</div>
+</body>
+</html>
